@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const logger = require("../middleware/logger");
 const extractToken = require("../middleware/extractToken");
-const contentController = require("../controller/contentController");
+const instanceController = require("../controller/instanceController");
 
 /**
  * @api {GET} /item/:modelZuid/:itemZuid - Fetch content item data
@@ -12,7 +12,7 @@ const contentController = require("../controller/contentController");
 router.get(
   "/item/:modelZuid/:itemZuid",
   [logger, extractToken],
-  contentController.getContentItem
+  instanceController.getContentItem
 );
 
 /**
@@ -24,7 +24,7 @@ router.get(
 router.post(
   "/item/:modelZuid/create",
   [logger, extractToken],
-  contentController.createContentItem
+  instanceController.createContentItem
 );
 
 /**
@@ -37,7 +37,7 @@ router.post(
 router.put(
   "/item/:modelZuid/:itemZuid/update",
   [logger, extractToken],
-  contentController.updateContentItem
+  instanceController.updateContentItem
 );
 
 /**
@@ -50,7 +50,7 @@ router.put(
 router.post(
   "/item/:modelZuid/:itemZuid/publish",
   [logger, extractToken],
-  contentController.publishContentItem
+  instanceController.publishContentItem
 );
 
 /**
@@ -63,7 +63,7 @@ router.post(
 router.delete(
   "/item/:modelZuid/:itemZuid/unpublish",
   [logger, extractToken],
-  contentController.unpublishContentItem
+  instanceController.unpublishContentItem
 );
 
 /**
@@ -73,7 +73,7 @@ router.delete(
 router.get(
   "/item/search",
   [logger, extractToken],
-  contentController.searchItem
+  instanceController.searchItem
 );
 
 /**
@@ -85,7 +85,7 @@ router.get(
 router.get(
   "/item/:modelZuid/:itemZuid/publishings",
   [logger, extractToken],
-  contentController.getPublishings
+  instanceController.getPublishings
 );
 
 /**
@@ -96,7 +96,7 @@ router.get(
 router.get(
   "/model/:modelZuid/",
   [logger, extractToken],
-  contentController.getModel
+  instanceController.getModel
 );
 
 /**
@@ -107,7 +107,7 @@ router.get(
 router.get(
   "/model/:modelZuid/fields",
   [logger, extractToken],
-  contentController.getModelFields
+  instanceController.getModelFields
 );
 
 /**
@@ -119,7 +119,7 @@ router.get(
 router.get(
   "/item/:modelZuid/:itemZuid/versions",
   [logger, extractToken],
-  contentController.getContentItemVersions
+  instanceController.getContentItemVersions
 );
 
 module.exports = router;

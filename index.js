@@ -14,7 +14,9 @@ const limiter = rateLimit({
 });
 
 // routes
-const contentRoute = require("./app/routes/contentRoute");
+const instanceRoute = require("./app/routes/instanceRoute");
+const authRoute = require("./app/routes/authRoute");
+const mediaRoute = require("./app/routes/mediaRoute");
 
 app.use(express.json());
 app.use(limiter);
@@ -25,6 +27,8 @@ app.use(
   })
 );
 
-app.use("/api/v1/content", contentRoute);
+app.use("/api/v1/instance", instanceRoute);
+app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/media", mediaRoute);
 
 app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
