@@ -19,6 +19,21 @@ exports.getFile = async (req, res) => {
   }
 };
 
+exports.getFiles = async (req, res) => {
+  const { binZuid } = req.params;
+  const token = req.token;
+
+  try {
+    const sdk = new ZestySDK(instanceZUID, token);
+    const response = await sdk.media.getFiles(binZuid);
+
+    res.send(response);
+  } catch (error) {
+    console.error("Error occurred:", error.message);
+    res.status(500).send({ error: "Something went wrong!" });
+  }
+};
+
 exports.getMediaGroup = async (req, res) => {
   const { groupZuid } = req.params;
   const token = req.token;
@@ -43,6 +58,20 @@ exports.getMediaGroups = async (req, res) => {
     const response = await sdk.media.getGroups(binZuid);
 
     res.send(response);
+  } catch (error) {
+    console.error("Error occurred:", error.message);
+    res.status(500).send({ error: "Something went wrong!" });
+  }
+};
+
+exports.createFile = async (req, res) => {
+  const { binZuid } = req.params;
+  const { stream, options } = req.body;
+  const token = req.token;
+
+  try {
+    console.log(req.file);
+    res.send("uploading");
   } catch (error) {
     console.error("Error occurred:", error.message);
     res.status(500).send({ error: "Something went wrong!" });
