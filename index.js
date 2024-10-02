@@ -1,98 +1,30 @@
+require("dotenv").config();
 const express = require("express");
-const SDK = require("@zesty-io/sdk");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
+const PORT = process.env.PORT || 3001;
+const allowedOrigins = process.env.ALLOWED_ORIGINS ?? [];
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes interval
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests, please try again later.", // Message sent when limit is exceeded
+  headers: true, // Send rate limit info in the `RateLimit-*` headers
+});
+
+// routes
+const contentRoute = require("./app/routes/contentRoute");
 
 app.use(express.json());
+app.use(limiter);
+app.use(
+  cors({
+    credentials: true,
+    origin: [/^https?:\/\/localhost(:[0-9]+)?$/, ...allowedOrigins.split(",")],
+  })
+);
 
-// content item details
-app.get("/content-item/:modelZuid/:itemZuid", async (req, res) => {
-  const { modelZuid, itemZuid } = req.params;
+app.use("/api/v1/content", contentRoute);
 
-  console.log(token);
-  if (!req.headers?.authorization) {
-    res.status(401).send({ error: "Unauthorized access" });
-    return;
-  }
-
-  const token = req.headers.authorization.split(" ")[1];
-
-  try {
-    const sdk = new SDK("8-f8dab0b3cb-46x3f0", token);
-    const response = await sdk.instance.getItem(modelZuid, itemZuid);
-
-    res.send(response);
-  } catch (error) {
-    console.error("Error occurred:", error.message);
-    res.status(500).send({ error: "Something went wrong!" });
-  }
-});
-
-// content item creation
-app.post("/content-item/:modelZuid/create", async (req, res) => {
-  const { modelZuid } = req.params;
-  const payload = req.body.payload;
-
-  if (!req.headers?.authorization) {
-    res.status(401).send({ error: "Unauthorized access" });
-    return;
-  }
-
-  const token = req.headers.authorization.split(" ")[1];
-
-  try {
-    const sdk = new SDK("8-f8dab0b3cb-46x3f0", token);
-    const response = await sdk.instance.createItem(modelZuid, payload);
-
-    res.send(response);
-  } catch (error) {
-    console.error("Error occurred:", error.message);
-    res.status(500).send({ error: "Something went wrong!" });
-  }
-});
-
-// content item update
-app.put("/content-item/:modelZuid/:itemZuid", async (req, res) => {
-  const { modelZuid, itemZuid } = req.params;
-  const payload = req.body.payload;
-
-  if (!req.headers?.authorization) {
-    res.status(401).send({ error: "Unauthorized access" });
-    return;
-  }
-
-  const token = req.headers.authorization.split(" ")[1];
-
-  try {
-    const sdk = new SDK("8-f8dab0b3cb-46x3f0", token);
-    const response = await sdk.instance.updateItem(
-      modelZuid,
-      itemZuid,
-      payload
-    );
-
-    res.send(response);
-  } catch (error) {
-    console.error("Error occurred:", error.message);
-    res.status(500).send({ error: "Something went wrong!" });
-  }
-});
-
-// update item
-app.put("/", async (req, res) => {
-  const sdk = new SDK(
-    "8-f8dab0b3cb-46x3f0",
-    "PTK-chlqt6b4m5qr5z73x1qgvrbdc631pddt1qlt85qclcxws"
-  );
-  const response = await sdk.instance.updateItem(
-    "6-92cd8ab9e6-26dl95",
-    "7-9ca69f9acb-m5qfrb",
-    {
-      //payload here
-    }
-  );
-  console.log(response);
-  res.send("hello world");
-});
-
-app.listen(3000, () => console.log("app started"));
+app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
