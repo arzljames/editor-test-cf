@@ -1,5 +1,8 @@
-const instanceZUID = process.env.INSTANCE_ZUID;
 const ZestySDK = require("@zesty-io/sdk");
+const isProd = process.env.PRODUCTION;
+const instanceZUID = isProd
+  ? process.env.DEV_INSTANCE_ZUID
+  : process.env.PROD_INSTANCE_ZUID;
 
 exports.getContentItem = async (req, res) => {
   const { modelZuid, itemZuid } = req.params;

@@ -1,5 +1,8 @@
 const ZestySDK = require("@zesty-io/sdk");
-const instanceZUID = process.env.INSTANCE_ZUID;
+const isProd = process.env.PRODUCTION;
+const instanceZUID = isProd
+  ? process.env.DEV_INSTANCE_ZUID
+  : process.env.PROD_INSTANCE_ZUID;
 
 exports.getFile = async (req, res) => {
   const { fileZuid } = req.params;
